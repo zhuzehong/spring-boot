@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" packages="com.jerry.springboot">
+    <properties>
+        <property name="APP_NAME">${project.artifactId}</property>
+        <property name="LOG_HOME">./logs</property>
+        <!-- 日志备份目录 -->
+        <property name="BACKUP_HOME">${LOG_HOME}/backup</property>
+        <property name="MVC_FILE_NAME">mvc</property>
+        <property name="BIZ_FILE_NAME">biz</property>
+        <property name="SQL_FILE_NAME">sql</property>
+        <property name="MQ_FILE_NAME">mq</property>
+        <property name="ERROR_FILE_NAME">error</property>
+
+        <property name="LOG_FILE_PATTERN">
+            <![CDATA[
+           %d{yyyy-MM-dd HH:mm:ss.SSS} %level %X{_global_msg_id} %thread  %logger[%method:%line] - %msg%n
+        ]]>
+        </property>
+        <property name="CONSOLE_FILE_PATTERN">
+            <![CDATA[
+            %d{yyyy-MM-dd HH:mm:ss.SSS} %level %X{_global_msg_id} %thread  %logger[%method:%line] - %msg%n
+        ]]>
+        </property>
+    </properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${CONSOLE_FILE_PATTERN}"/>
+        </Console>
+
+        <RollingRandomAccessFile name="RollingFile"
+                                 fileName="${LOG_HOME}/${BIZ_FILE_NAME}.log"
+                                 filePattern="${LOG_HOME}/$${date:yyyyMM}/${BIZ_FILE_NAME}.%d{yyyyMMdd}.log">
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_FILE_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="ERROR"
+                                 fileName="${LOG_HOME}/${ERROR_FILE_NAME}.log"
+                                 filePattern="${LOG_HOME}/$${date:yyyyMM}/${ERROR_FILE_NAME}.%d{yyyyMMdd}.log">
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_FILE_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <logger name="springfox" level="warn" additivity="false"/>
+        <logger level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </logger>
+
+        <Root level="INFO" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

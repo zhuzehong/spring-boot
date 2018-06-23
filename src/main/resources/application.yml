@@ -1,0 +1,24 @@
+info.version: ${project.version}
+info.artifactId: ${project.artifactId}
+info.appName: ${spring.application.name}
+info.active: ${profile.active}
+
+#spring:
+#  application:
+#    name: ${project.artifactId}
+#  profiles:
+#    active: ${profile.active}
+
+---
+spring:
+  profiles:
+    active: dev
+
+---
+spring:
+  profiles:
+    active: test
+
+logging:
+  file: logs/jerry.log
+#  level: debug
